@@ -119,7 +119,7 @@
           }
         }
       ],
-      "_postman_id": "b2d09b2e-800e-4104-abf0-8d8e74a41b3f",
+      "id": "b2d09b2e-800e-4104-abf0-8d8e74a41b3f",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -166,7 +166,7 @@
           }
         }
       ],
-      "_postman_id": "57f4a61e-95b2-4bb3-bdfb-1be994d673b9",
+      "id": "57f4a61e-95b2-4bb3-bdfb-1be994d673b9",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -200,7 +200,7 @@
           }
         }
       ],
-      "_postman_id": "3b33789e-6788-46c7-b5dd-355e63910a01",
+      "id": "3b33789e-6788-46c7-b5dd-355e63910a01",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -225,7 +225,7 @@
     {
       "listen": "prerequest",
       "script": {
-        "id": "625ef28e-9fd7-425a-84a8-b3f90410ba46",
+        "id": "a33763b1-c32c-4e43-801b-c6a5773616aa",
         "type": "text/javascript",
         "exec": [
           ""
@@ -235,7 +235,7 @@
     {
       "listen": "test",
       "script": {
-        "id": "15d13216-7fd4-424d-8b20-be7eb6216032",
+        "id": "c691a76d-13b6-4e7c-88ba-18f375fd2b45",
         "type": "text/javascript",
         "exec": [
           ""
@@ -245,16 +245,14 @@
   ],
   "variable": [
     {
-      "id": "768f5ba7-9681-46b3-b3ab-b913038b7637",
+      "id": "5514595d-6494-4508-888b-10f964e2fb4c",
       "key": "pandascore_token",
-      "value": "",
-      "type": "string"
+      "value": "enter-pandascore-token-here"
     },
     {
-      "id": "8480013c-96d9-4c05-a622-cf87a9a6793e",
+      "id": "2427e72f-5571-4b07-b8f6-8f1f3bdffff9",
       "key": "slack_incoming_webhook_url",
-      "value": "",
-      "type": "string"
+      "value": "enter-slack-webhook-url-here"
     }
   ]
 }
