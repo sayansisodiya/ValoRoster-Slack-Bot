@@ -19,7 +19,7 @@
           }
         }
       ],
-      "_postman_id": "0a15a4bf-8a16-413b-85c4-13da0d2f0af3",
+      "id": "0a15a4bf-8a16-413b-85c4-13da0d2f0af3",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -28,10 +28,7 @@
         "header": [],
         "body": {
           "mode": "urlencoded",
-          "urlencoded": [],
-          "options": {
-            "urlencoded": {}
-          }
+          "urlencoded": []
         },
         "url": "{{team_webhook_url}}"
       },
@@ -39,7 +36,7 @@
     },
     {
       "name": "Player Webhook",
-      "_postman_id": "7b7b395b-aa89-4b3d-ae4b-ada5f57b97c4",
+      "id": "7b7b395b-aa89-4b3d-ae4b-ada5f57b97c4",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -55,7 +52,7 @@
     {
       "listen": "prerequest",
       "script": {
-        "id": "ae1132eb-9b55-4905-b68d-f788b86a970d",
+        "id": "05c9b7ea-26da-4946-8f3c-8f795466ae19",
         "type": "text/javascript",
         "exec": [
           ""
@@ -65,7 +62,7 @@
     {
       "listen": "test",
       "script": {
-        "id": "d1beb6c1-fcf0-4d73-b038-d4f222fa422f",
+        "id": "23ea15ad-b0b3-45bb-a680-fcce89371cc8",
         "type": "text/javascript",
         "exec": [
           ""
@@ -75,16 +72,14 @@
   ],
   "variable": [
     {
-      "id": "c6287b6c-cecf-439e-a316-8ac3f38b467a",
+      "id": "12c94527-674f-465e-9407-05577128dcff",
       "key": "team_webhook_url",
-      "value": "",
-      "type": "string"
+      "value": "enter-team-webhook-url-here"
     },
     {
-      "id": "304062c7-849a-4879-823b-2429737efb1d",
+      "id": "4b4a32f4-9ac7-4299-8de3-db8796b91ca3",
       "key": "player_webhook_url",
-      "value": "",
-      "type": "string"
+      "value": "enter-player-webhook-url-here"
     }
   ]
 }
