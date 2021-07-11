@@ -1,0 +1,90 @@
+{
+  "info": {
+    "_postman_id": "dd849b6a-2992-49c2-9ffb-c6f9a9896b17",
+    "name": "ValBot Webhook URLS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Team Webhook",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "c317da2e-4cab-4eb7-9969-28e8442e92f3",
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "_postman_id": "0a15a4bf-8a16-413b-85c4-13da0d2f0af3",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [],
+          "options": {
+            "urlencoded": {}
+          }
+        },
+        "url": "{{team_webhook_url}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Player Webhook",
+      "_postman_id": "7b7b395b-aa89-4b3d-ae4b-ada5f57b97c4",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{player_webhook_url}}"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "ae1132eb-9b55-4905-b68d-f788b86a970d",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "d1beb6c1-fcf0-4d73-b038-d4f222fa422f",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "c6287b6c-cecf-439e-a316-8ac3f38b467a",
+      "key": "team_webhook_url",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "id": "304062c7-849a-4879-823b-2429737efb1d",
+      "key": "player_webhook_url",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
