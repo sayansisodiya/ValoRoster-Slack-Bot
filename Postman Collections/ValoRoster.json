@@ -1,0 +1,642 @@
+{
+  "info": {
+    "_postman_id": "cfc6178d-73d6-41d8-af3d-1e3be8a6b8b4",
+    "name": "ValoRoster Slack Bot",
+    "description": "For an introduction to and demonstration of ValoRoster, please go to the [workspace overview](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/overview).\n\n# Get Started with ValoRoster\n\n## Step 1: Fork this collection\nTo use ValoRoster, click the __Fork__ button near the top of the page and fork the `ValoRoster Slack Bot` collection into your own workspace. The following steps are to be completed in your fork of the collection.\n\n## Step 2: __Create a Postman webhook__\n[Postman webhooks](https://learning.postman.com/docs/integrations/webhooks/) allow an entire collection to run when an event occurs. To create the Postman webhook that will run the `ValoRoster Slack Bot` collection in the current workspace, enter the following information in the __Initial Value__ fields under the __Variables__ tab of the `ValoRoster Slack Bot` collection.\n\n| Collection Variable Name | Collection Variable Initial Value                                                                                                                                                                                                                                                                                                               |\n|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| `postman_api_key`        | from the [Postman account settings](https://go.postman.co/settings/me/api-keys)                                                                                                                                                                                                                                                         |\n| `workspace_id`           | the ID of the workspace this collection is in; if it's a personal or team workspace, you can find the ID in this page's URL. ![Screen-Shot-2021-07-26-at-5-29-42-PM.png](https://i.postimg.cc/YSWKWJ1z/Screen-Shot-2021-07-26-at-5-29-42-PM.png) If it's a public workspace, you can find the ID using the [Postman API workspaces endpoint](https://www.postman.com/postman/workspace/postman-public-workspace/documentation/12959542-c8142d51-e97c-46b6-bd77-52bb66712c9a?entity=request-05e2c051-e3c9-4087-a240-a59440a536b0)|\n| `collection_uid`         | the ID of the `ValoRoster Slack Bot` collection; you can find this by selecting `ValoRoster Slack Bot` collection from the __Collections__ menu on the left, then clicking the __ⓘ__ on the right side of the screen. The `collection_uid` is listed under __ID__                                                                                                                                               |\n\n  Once you've entered and saved those variable values, click on the `Create Webhook` folder and then on the request named `Create Postman Webhook`. Hit __Send__ to create the webhook, then copy the value of the `webhookUrl` field from the repsonse body. Navigate back to the __Variables__ tab of the `ValoRoster Slack Bot` collection, and paste the value into the `postman_webhook_url` variable's __Initial Value__ field.\n\n## Step 3: __Get a PandaScore access token__\nValoRoster gets player and roster information through requests to the PandaScore API. To get a PandaScore access token, first [create a PandaScore account](https://app.pandascore.co/signup). Next, go to your [account dashboard](https://app.pandascore.co/dashboard/main) and copy the access token. Paste that value in the `pandascore_token` variable's __Initial Value__ field under the __Variables__ tab of the `ValoRoster Slack Bot` collection.\n## Step 4: __Create a Slack app for ValoRoster__\nTo integrate ValoRoster into your Slack workspace, [create a Slack app](https://api.slack.com/apps) from scratch with an __Incoming Webhook__ and two __Slash Commands__.\n - Follow [this tutorial](https://ivankahl.com/send-slack-messages-from-anywhere-using-webhook-integration/) until the _Using our new Slack bot_ section to create a Slack app and set up an __Incoming Webhook__. Copy the resulting incoming webhook URL and paste it in the `slack_incoming_webhook_url` variable's __Initial Value__ field under the __Variables__ tab of the `ValoRoster Slack Bot` collection.\n - [This section](https://api.slack.com/interactivity/slash-commands#creating_commands) of Slack's documentation explains how to create __Slash Commands__. From your Slack app's home page, click the __Slash Commands__ tab on the left. Create two slash commands named `/player` and `/roster`, and set the `Request URL` for both commands to the Postman Webhook URL you created earlier (stored in the collection variable `postman_webhook_url`). Set the remaining fields as you please, or refer to the examples below:\n\n<p float=\"left\">\n  <img src=\"https://i.postimg.cc/156Q6HCG/Screen-Shot-2021-07-25-at-11-59-56-PM.png\" width=\"309\" />\n  <img src=\"https://i.postimg.cc/HLNZ6GjV/Screen-Shot-2021-07-26-at-12-01-27-AM.png\" width=\"309\" /> \n</p>\n\n - Click the __OAuth & Permissions__ tab on the left, navigate to __Scopes__, and give your Slack app the Bot Token Scope `channels:history` if it doesn't already have it\n - Click the __Install App__ tab on the left, then click the __Reinstall to Workspace__ button and follow the instructions. This is necessary because the Slack app's permissions were updated\n\n# Using ValoRoster\n\nNow that ValoRoster is set up, you can use it from the Slack channel you installed it into at the end of Step 4. The two commands are:\n\n - `/player <playerName>`, where `<playerName>` is the name of a professional Valorant player you want information about\n - `/roster <teamName>`, where `<teamName>` is the name of a professional Valorant team you want the roster for\n\nTo see a user demo, refer to the __ValoRoster Demo__ section of the `ValoRoster Slack Bot` [workspace overview](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/overview).\n\nNote that the parameters for both commands are case-sensitive. Also, ValoRoster's response time can be slow because Postman webhooks, which are [Postman monitors](https://learning.postman.com/docs/running-collections/scheduling-collection-runs/) under the hood, do not run instantaneously.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Player",
+      "item": [
+        {
+          "name": "Get Player",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5feeff6f-2cd8-4e8c-af11-7633d0ef68e5",
+                "exec": [
+                  "var previousRequest = JSON.parse(globals.previousRequest)",
+                  "var webhookRequestData = previousRequest.data;",
+                  "",
+                  "var commandName = webhookRequestData.command;",
+                  "pm.collectionVariables.set(\"current_command\", commandName);",
+                  "console.log(\"command was \" + commandName);",
+                  "",
+                  "var playerName = webhookRequestData.text;",
+                  "",
+                  "// webhookRequestData contains the data sent to your webhook.",
+                  "console.log(\"data sent to webhook \" + webhookRequestData);",
+                  "",
+                  "pm.collectionVariables.set(\"name_param\", playerName);",
+                  "console.log(\"playerName: \" + playerName);",
+                  "console.log(\"name_param: \" + pm.collectionVariables.get(\"name_param\"));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "62676cbf-b411-4f8b-b0a0-b3d5dddb67b8",
+                "exec": [
+                  "try {",
+                  "    if(pm.collectionVariables.get(\"current_command\") != \"/player\") {",
+                  "        console.log(\"command is not /player\")",
+                  "        throw \"command is not /player\";",
+                  "    }",
+                  "",
+                  "    const response = pm.response.json()[0];",
+                  "    ",
+                  "    var player = [];",
+                  "",
+                  "    if(!response.image_url) {",
+                  "        var image = \"https://i2.wp.com/png.pngitem.com/pimgs/s/20-203432_profile-icon-png-image-free-download-searchpng-ville.png\";",
+                  "    } else {",
+                  "        var image = response.image_url;",
+                  "    }",
+                  "",
+                  "    var playerHeader = {",
+                  "        \"type\": \"section\",",
+                  "        \"text\": {",
+                  "            \"type\": \"mrkdwn\",",
+                  "            \"text\": `:joystick: Player Found! :joystick:\\n\\n\\n                                                           \\\"*${pm.collectionVariables.get(\"name_param\")}*\\\"`",
+                  "        },",
+                  "        \"accessory\": {",
+                  "            \"type\": \"image\",",
+                  "            \"image_url\": image,",
+                  "            \"alt_text\": \"player\"",
+                  "        }",
+                  "    }",
+                  "",
+                  "    player.push(playerHeader);",
+                  "",
+                  "    var playerInfo = {",
+                  "        \"type\": \"section\",",
+                  "        \"fields\": [",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"*First Name:*\"",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"\" + response.first_name",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"*Last Name:*\"",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"\" + response.last_name",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"*Birthday:*\"",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"\" + response.birthday",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"*Team:*\"",
+                  "            },",
+                  "            {",
+                  "                \"type\": \"mrkdwn\",",
+                  "                \"text\": \"\" + response.current_team.name",
+                  "            }",
+                  "        ]",
+                  "    }",
+                  "",
+                  "    player.push(playerInfo);",
+                  "",
+                  "    var logo = {",
+                  "        \"type\": \"context\",",
+                  "        \"elements\": [",
+                  "            {",
+                  "                \"type\": \"image\",",
+                  "                \"image_url\": response.current_team.image_url,",
+                  "                \"alt_text\": \"logo\"",
+                  "            }",
+                  "        ]",
+                  "    }",
+                  "",
+                  "    player.push(logo);",
+                  "",
+                  "    pm.collectionVariables.set(\"player\", JSON.stringify(player));",
+                  "",
+                  "    postman.setNextRequest(\"Send Player Info\");",
+                  "    ",
+                  "} catch (error) {",
+                  "    if(pm.collectionVariables.get(\"current_command\") == \"/roster\") {",
+                  "        postman.setNextRequest(\"Get Roster\");",
+                  "    } else {",
+                  "        console.log(\"player does not exist\");",
+                  "        postman.setNextRequest(\"Send Player Error Message\");",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "_postman_id": "fcf95d1a-4e5b-4172-af76-ea4434d499d9",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.pandascore.co/valorant/players?token={{pandascore_token}}&filter[name]={{name_param}}",
+              "protocol": "https",
+              "host": [
+                "api",
+                "pandascore",
+                "co"
+              ],
+              "path": [
+                "valorant",
+                "players"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{pandascore_token}}"
+                },
+                {
+                  "key": "filter[name]",
+                  "value": "{{name_param}}"
+                }
+              ]
+            },
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Player Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "postman.setNextRequest(null);"
+                ],
+                "type": "text/javascript",
+                "id": "d5d21422-378e-41ca-90ca-559cc6855fe9"
+              }
+            }
+          ],
+          "_postman_id": "fd3ea5ff-f5d2-465b-9a17-2bbc0ca02eac",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \":joystick: Player Found! :joystick:\",\n    \"blocks\": {{player}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{slack_incoming_webhook_url}}",
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Player Error Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "postman.setNextRequest(null);"
+                ],
+                "type": "text/javascript",
+                "id": "b8d88f51-66fd-414e-b56e-3c4c3d752e31"
+              }
+            }
+          ],
+          "_postman_id": "85409f78-2bbf-48f8-8b10-e0070d456917",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \"Please type the name of a professional Valorant player after `/player`\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{slack_incoming_webhook_url}}",
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        }
+      ],
+      "_postman_id": "1872d7c1-3d04-4639-aafa-b9c4133c38d1",
+      "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+    },
+    {
+      "name": "Get Roster",
+      "item": [
+        {
+          "name": "Get Roster",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "1cfd597d-680a-4de1-8827-378c082b7910",
+                "exec": [
+                  "try {",
+                  "  const response = pm.response.json()[0].players;",
+                  "",
+                  "    var roster = [];",
+                  "",
+                  "    var teamHeader = {",
+                  "        \"type\": \"section\",",
+                  "        \"text\": {",
+                  "            \"type\": \"mrkdwn\",",
+                  "            \"text\": `:video_game: Team Found! :video_game:\\n\\n\\n                                                             *${pm.collectionVariables.get(\"team_param\")}*`",
+                  "        },",
+                  "        \"accessory\": {",
+                  "            \"type\": \"image\",",
+                  "            \"image_url\": pm.response.json()[0].image_url,",
+                  "            \"alt_text\": \"logo\"",
+                  "        }",
+                  "    }",
+                  "",
+                  "    roster.push(teamHeader);",
+                  "",
+                  "    var divider = {",
+                  "        \"type\": \"divider\"",
+                  "    }",
+                  "",
+                  "    roster.push(divider);",
+                  "",
+                  "    var rosterPlayerData;",
+                  "    ",
+                  "    response.forEach((player) => {",
+                  "",
+                  "        if(!player.image_url) {",
+                  "            var image2 = JSON.stringify(player.image_url);",
+                  "        } else {",
+                  "            var image2 = player.image_url;",
+                  "        }",
+                  "",
+                  "        rosterPlayerData = {",
+                  "\t\t\t\"type\": \"section\",",
+                  "\t\t\t\"text\": {",
+                  "\t\t\t\t\"type\": \"mrkdwn\",",
+                  "\t\t\t\t\"text\": player.name",
+                  "\t\t\t},",
+                  "\t\t\t\"accessory\": {",
+                  "\t\t\t\t\"type\": \"image\",",
+                  "\t\t\t\t\"image_url\": image2,",
+                  "\t\t\t\t\"alt_text\": \"player\"",
+                  "\t\t\t}",
+                  "\t\t}",
+                  "",
+                  "        roster.push(rosterPlayerData);",
+                  "    });",
+                  "",
+                  "    console.log(roster);",
+                  "",
+                  "    pm.collectionVariables.set(\"roster\", JSON.stringify(roster));",
+                  "",
+                  "    postman.setNextRequest(\"Send Roster\");",
+                  "",
+                  "} catch (error) {",
+                  "    console.log(\"team does not exist\");",
+                  "    postman.setNextRequest(\"Send Roster Error Message\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "932f7e1c-cfd3-422c-a15a-1c8fead5884c",
+                "exec": [
+                  "var previousRequest = JSON.parse(globals.previousRequest)",
+                  "var webhookRequestData = previousRequest.data;",
+                  "",
+                  "var teamName = webhookRequestData.text;",
+                  "",
+                  "// webhookRequestData contains the data sent to your webhook.",
+                  "console.log(webhookRequestData);",
+                  "",
+                  "pm.collectionVariables.set(\"team_param\", teamName);",
+                  "console.log(\"teamName: \" + teamName);",
+                  "console.log(\"team_param: \" + pm.collectionVariables.get(\"team_param\"));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "_postman_id": "6ad7926e-9788-4cf3-9f42-411057136ac2",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.pandascore.co/valorant/teams?token={{pandascore_token}}&filter[name]={{team_param}}",
+              "protocol": "https",
+              "host": [
+                "api",
+                "pandascore",
+                "co"
+              ],
+              "path": [
+                "valorant",
+                "teams"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{pandascore_token}}"
+                },
+                {
+                  "key": "filter[name]",
+                  "value": "{{team_param}}"
+                }
+              ]
+            },
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Roster",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "postman.setNextRequest(null);"
+                ],
+                "type": "text/javascript",
+                "id": "e5eff599-53b6-4221-9bd9-dbd6d7647b44"
+              }
+            }
+          ],
+          "_postman_id": "020bcebe-f224-4db8-83dd-5dd450b85b44",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \":video_game: Team Found! :video_game:\",\n\t\"blocks\": {{roster}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{slack_incoming_webhook_url}}",
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Roster Error Message",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "postman.setNextRequest(null);"
+                ],
+                "type": "text/javascript",
+                "id": "1d987884-6e80-4279-8bb8-6e86b28a89f1"
+              }
+            }
+          ],
+          "_postman_id": "98e7b69b-33be-4530-82e0-ceba96658324",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \"Please type the name of a professional Valorant team after `/roster`\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{slack_incoming_webhook_url}}",
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        }
+      ],
+      "_postman_id": "49adf024-50d8-43df-a4d3-2f387f7b842e",
+      "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+    },
+    {
+      "name": "Postman Webhook",
+      "item": [
+        {
+          "name": "Webhook that runs this collection",
+          "_postman_id": "c1d4621a-184f-4a17-868b-7b498a8f203d",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{postman_webhook_url}}",
+            "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+          },
+          "response": []
+        }
+      ],
+      "_postman_id": "98831257-520b-4268-a1fb-240cecff9d33",
+      "description": "To get started with ValoRoster, please refer to [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) from the `ValoRoster Slack Bot` collection"
+    },
+    {
+      "name": "Create Webhook",
+      "item": [
+        {
+          "name": "Create Postman Webhook",
+          "_postman_id": "e5cd2c91-f026-4dbb-aa4c-1a3f7b4a7b71",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "apikey",
+              "apikey": {
+                "value": "{{postman_api_key}}",
+                "key": "X-API-Key"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"webhook\":{\n        \"name\": \"ValoRoster-Postman-webhook\",\n        \"collection\": \"{{collection_uid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.getpostman.com/webhooks?workspace={{workspace_id}}",
+              "protocol": "https",
+              "host": [
+                "api",
+                "getpostman",
+                "com"
+              ],
+              "path": [
+                "webhooks"
+              ],
+              "query": [
+                {
+                  "key": "workspace",
+                  "value": "{{workspace_id}}"
+                }
+              ]
+            },
+            "description": "The instructions below are from [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) for the `ValoRoster Slack Bot` collection. Please refer to that documentation to fully set up ValoRoster.\n\n> [Postman webhooks](https://learning.postman.com/docs/integrations/webhooks/) allow an entire collection to run when an event occurs. To create the Postman webhook that will run the `ValoRoster Slack Bot` collection in the current workspace, enter the following information in the __Initial Value__ fields under the __Variables__ tab of the `ValoRoster Slack Bot` collection.\n\n> | Collection Variable Name | Collection Variable Initial Value                                                                                                                                                                                                                                                                                                               |\n|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| `postman_api_key`        | from the [Postman account settings](https://go.postman.co/settings/me/api-keys)                                                                                                                                                                                                                                                         |\n| `workspace_id`           | the ID of the workspace this collection is in; you can find this in this page's URL or using the [Postman API workspaces endpoint](https://www.postman.com/postman/workspace/postman-public-workspace/documentation/12959542-c8142d51-e97c-46b6-bd77-52bb66712c9a?entity=request-05e2c051-e3c9-4087-a240-a59440a536b0) [![Screen-Shot-2021-07-26-at-5-29-42-PM.png](https://i.postimg.cc/YSWKWJ1z/Screen-Shot-2021-07-26-at-5-29-42-PM.png)](https://postimg.cc/FfNBtCCY)|\n| `collection_uid`         | the ID of the `ValoRoster Slack Bot` collection; you can find this by selecting `ValoRoster Slack Bot` collection from the __Collections__ menu on the left, then clicking the __ⓘ__ on the right side of the screen. The `collection_uid` is listed under __ID__                                                                                                                                               |\n\n> Once you've entered and saved those variable values, click on the `Create Webhook` folder and then on the request named `Create Postman Webhook`. Hit __Send__ to create the webhook, then copy the value of the `webhookUrl` field from the repsonse body. Navigate back to the __Variables__ tab of the `ValoRoster Slack Bot` collection, and paste the value into the `postman_webhook_url` variable's __Initial Value__ field."
+          },
+          "response": [
+            {
+              "id": "0be081e5-2e50-46ae-a4af-6e3bc78cf0a1",
+              "name": "Create Webhook",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "x-workspace-id",
+                    "value": "{{workspaceId}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"webhook\":{\n        \"name\": \"Sample Webhook\",\n        \"collection\": \"13223329-78f7e7dd-e9f4-4607-9610-098524f06589\"\n    }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "https://api.getpostman.com/webhooks?workspace={{workspace_id}}",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "getpostman",
+                    "com"
+                  ],
+                  "path": [
+                    "webhooks"
+                  ],
+                  "query": [
+                    {
+                      "key": "workspace",
+                      "value": "{{workspace_id}}"
+                    }
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": null,
+              "cookie": [],
+              "responseTime": null,
+              "body": "{\n    \"webhook\": {\n        \"id\": \"1eba1c36-c343-4eb0-a25a-37117650e628\",\n        \"name\": \"Sample Webhook\",\n        \"collection\": \"13323329-78f7e7dd-e9f4-4607-9610-098524f06589\",\n        \"webhookUrl\": \"https://example.com/webhookUrl\",\n        \"uid\": \"13323329-1eba1c36-c343-4eb0-a25a-37117650e628\"\n    }\n}"
+            }
+          ]
+        }
+      ],
+      "_postman_id": "bdaa4074-9eaa-4ca7-860a-932a5312fe65",
+      "description": "The instructions below are from [the documentation](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) for the `ValoRoster Slack Bot` collection. Please refer to that documentation to fully set up ValoRoster.\n\n> [Postman webhooks](https://learning.postman.com/docs/integrations/webhooks/) allow an entire collection to run when an event occurs. To create the Postman webhook that will run the `ValoRoster Slack Bot` collection in the current workspace, enter the following information in the __Initial Value__ fields under the __Variables__ tab of the `ValoRoster Slack Bot` collection.\n\n> | Collection Variable Name | Collection Variable Initial Value                                                                                                                                                                                                                                                                                                               |\n|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| `postman_api_key`        | from the [Postman account settings](https://go.postman.co/settings/me/api-keys)                                                                                                                                                                                                                                                         |\n| `workspace_id`           | the ID of the workspace this collection is in; you can find this in this page's URL or using the [Postman API workspaces endpoint](https://www.postman.com/postman/workspace/postman-public-workspace/documentation/12959542-c8142d51-e97c-46b6-bd77-52bb66712c9a?entity=request-05e2c051-e3c9-4087-a240-a59440a536b0) [![Screen-Shot-2021-07-26-at-5-29-42-PM.png](https://i.postimg.cc/YSWKWJ1z/Screen-Shot-2021-07-26-at-5-29-42-PM.png)](https://postimg.cc/FfNBtCCY)|\n| `collection_uid`         | the ID of the `ValoRoster Slack Bot` collection; you can find this by selecting `ValoRoster Slack Bot` collection from the __Collections__ menu on the left, then clicking the __ⓘ__ on the right side of the screen. The `collection_uid` is listed under __ID__                                                                                                                                               |\n\n> Once you've entered and saved those variable values, click on the `Create Webhook` folder and then on the request named `Create Postman Webhook`. Hit __Send__ to create the webhook, then copy the value of the `webhookUrl` field from the repsonse body. Navigate back to the __Variables__ tab of the `ValoRoster Slack Bot` collection, and paste the value into the `postman_webhook_url` variable's __Initial Value__ field."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "ea9a6e44-ead5-4c14-a043-14bf9ecd9c9b",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "73dd5e94-5044-4e10-8722-d4046099de65",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "03c409bf-79f6-4f19-97d1-e07cdab63d66",
+      "key": "postman_api_key",
+      "value": "enter Postman API key here",
+      "type": "string"
+    },
+    {
+      "id": "b229dd9a-191c-4f04-a636-22ffa8d1557a",
+      "key": "workspace_id",
+      "value": "enter your workspace's ID here",
+      "type": "string"
+    },
+    {
+      "id": "98a0d451-df4c-4f1a-bc85-c4a7e47d53d7",
+      "key": "collection_uid",
+      "value": "enter ID for ValoRoster Slack Bot collection here",
+      "type": "string"
+    },
+    {
+      "id": "38e3499c-b554-4e8b-85fd-bdc7f391af0e",
+      "key": "postman_webhook_url",
+      "value": "enter Postman webhook url you generated here",
+      "type": "string"
+    },
+    {
+      "id": "ea20a132-a90e-4a46-9083-960e36145272",
+      "key": "pandascore_token",
+      "value": "enter PandaScore token here",
+      "type": "string"
+    },
+    {
+      "id": "9f00ee66-8788-4d69-923f-f3776e9ded82",
+      "key": "slack_incoming_webhook_url",
+      "value": "enter Slack incoming webhook url here",
+      "type": "string"
+    }
+  ]
+}
