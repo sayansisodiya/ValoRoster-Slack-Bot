@@ -16,4 +16,4 @@ Currently, the only two ValoRoster commands are:
   * returns basic biographical and professional info on player \<gamertag\>
 
 ### ValoRoster Demo
-![](https://playground-ap.s3.ap-south-1.amazonaws.com/sayan-first-collection/final_60fe52a6d633d6007f39ffa8_619181.gif)
+![](https://github.com/sayansisodiya/ValoRoster-Slack-Bot/blob/main/valorostergif.gif)
