@@ -7,10 +7,13 @@ If you want to read about my development process for ValoRoster, here's a shamel
 
 ### Using ValoRoster
 
-Interested in using ValoRoster yourself? [This public workspace in Postman](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/documentation/16285330-5e36734f-7132-4540-abca-a9d835e3229f) should have all the info you need to get up and running.
+Interested in using ValoRoster yourself? [This public workspace in Postman](https://www.postman.com/sayansoloPW/workspace/valoroster-slack-bot/overview) should have all the info you need to get up and running.
 
 Currently, the only two ValoRoster commands are:
 * /roster \<teamName\>
   * returns the names and pictures of players currently on team \<team-name\>
 * /player \<playerName\>
   * returns basic biographical and professional info on player \<gamertag\>
+
+### ValoRoster Demo
+![](https://playground-ap.s3.ap-south-1.amazonaws.com/sayan-first-collection/final_60fe52a6d633d6007f39ffa8_619181.gif)
