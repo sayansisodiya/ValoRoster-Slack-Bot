@@ -1,5 +1,5 @@
 # ValoRoster
-ValoRoster is an esports Slack bot for professional Valorant team and player info. I created it while working as a Developer Relations Intern at [Postman](https://www.postman.com/).
+ValoRoster is an esports Slack bot for professional Valorant team and player info (Valorant is an online multiplayer video game). I created it while working as a Developer Relations Intern at [Postman](https://www.postman.com/).
 
 ValoRoster is pretty basic; it uses Slack (slash commands and incoming webhook), Postman (webhooks and collections), the [PandaScore REST API for Valorant](https://developers.pandascore.co/doc/index_valorant.htm), and some JavaScript.
 
